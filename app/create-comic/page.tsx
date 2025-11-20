@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 export default function CreateComicPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -31,6 +32,7 @@ export default function CreateComicPage() {
     const { error } = await supabase.from("comics").insert({
       title,
       description,
+      is_public: isPublic,
     });
 
     setLoading(false);
@@ -76,6 +78,19 @@ export default function CreateComicPage() {
               placeholder="Short summary of your comic..."
               required
             />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="isPublic"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+              className="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-white focus:ring-2 focus:ring-white"
+            />
+            <label htmlFor="isPublic" className="text-sm font-medium">
+              Public (show this comic on Explore)
+            </label>
           </div>
 
           <button

@@ -28,6 +28,7 @@ export default function ExplorePage() {
       const { data, error } = await supabase
         .from("comics")
         .select("*")
+        .eq("is_public", true)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -80,6 +81,9 @@ export default function ExplorePage() {
                     </span>
                   </div>
                   <h2 className="text-2xl font-semibold">{comic.title}</h2>
+                  {comic.user_id && (
+                    <p className="text-xs text-zinc-500">By {comic.user_id}</p>
+                  )}
                   <p className="text-zinc-300">
                     {comic.description
                       ? truncate(comic.description, 150)
