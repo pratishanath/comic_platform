@@ -2,24 +2,27 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function CreateComicPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const ideaParam = searchParams.get("idea");
 
   useEffect(() => {
-    if (!ideaParam || description.trim().length > 0) return;
-    try {
-      setDescription(decodeURIComponent(ideaParam));
-    } catch {
-      setDescription(ideaParam);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const idea = params.get("idea");
+      if (idea && description.trim().length === 0) {
+        try {
+          setDescription(decodeURIComponent(idea));
+        } catch {
+          setDescription(idea);
+        }
+      }
     }
-  }, [ideaParam, description]);
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
