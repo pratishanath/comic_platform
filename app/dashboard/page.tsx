@@ -1,0 +1,90 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
+type Comic = {
+  id: string;
+  title: string;
+  description: string;
+  created_at: string;
+};
+
+export default function Dashboard() {
+  const [comics, setComics] = useState<Comic[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadComics() {
+      const { data, error } = await supabase
+        .from("comics")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(error);
+      } else if (data) {
+        setComics(data as Comic[]);
+      }
+
+      setLoading(false);
+    }
+
+    loadComics();
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-white p-8">
+      <h1 className="text-3xl font-bold mb-4">Creator Dashboard</h1>
+
+      <Link
+        href="/create-comic"
+        className="inline-block px-4 py-2 rounded bg-white text-black font-medium hover:bg-zinc-200 transition mb-6"
+      >
+        + Create New Comic
+      </Link>
+
+      <div className="mt-4">
+        {loading ? (
+          <p className="text-zinc-400">Loading comics...</p>
+        ) : comics.length === 0 ? (
+          <p className="text-zinc-400">
+            You don&apos;t have any comics yet. Create one!
+          </p>
+        ) : (
+          <ul className="space-y-3">
+            {comics.map((comic) => (
+              <li
+              key={comic.id}
+              className="border border-zinc-800 rounded p-4 hover:border-zinc-500 transition"
+            >
+              <h2 className="text-xl font-semibold">{comic.title}</h2>
+              <p className="text-zinc-400 text-sm mt-1">{comic.description}</p>
+              <p className="text-xs text-zinc-500 mt-2">
+                {new Date(comic.created_at).toLocaleString()}
+              </p>
+          
+              <div className="mt-3 flex gap-2">
+                <Link
+                  href={`/comics/${comic.id}`}
+                  className="text-sm px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700"
+                >
+                  View comic
+                </Link>
+          
+                <Link
+                  href={`/comics/${comic.id}/pages`}
+                  className="text-sm px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700"
+                >
+                  Manage pages
+                </Link>
+              </div>
+            </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </main>
+  );
+}
