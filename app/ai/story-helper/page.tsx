@@ -111,6 +111,10 @@ export default function StoryHelperPage() {
             <div className="whitespace-pre-line text-zinc-200 leading-relaxed">
               {result.content}
             </div>
+            <p className="text-xs text-zinc-500">
+              This outline is a starting point—feel free to tweak the scenes when
+              you create your comic.
+            </p>
             <button
               type="button"
               onClick={() =>

@@ -9,6 +9,7 @@ type Comic = {
   title: string;
   description: string;
   created_at: string;
+  user_id?: string | null;
 };
 
 type ComicPage = {
@@ -65,32 +66,49 @@ export default function ComicReaderPage() {
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white px-4 py-10 flex flex-col items-center">
-      <div className="w-full max-w-4xl">
-        <h1 className="text-4xl font-bold mb-4 text-center">{comic.title}</h1>
-        <p className="text-zinc-400 mb-10 text-center">{comic.description}</p>
+      <div className="w-full max-w-4xl space-y-10">
+        <section className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-6 text-center shadow-lg">
+          <p className="text-xs uppercase tracking-[0.2em] text-emerald-400 mb-3">
+            Comic Reader
+          </p>
+          <h1 className="text-4xl font-bold mb-3">{comic.title}</h1>
+          {comic.user_id && (
+            <p className="text-sm text-zinc-400 mb-4">By {comic.user_id}</p>
+          )}
+          <p className="text-zinc-300 mb-6">{comic.description}</p>
+          <p className="text-sm text-zinc-500">
+            {pages.length > 0
+              ? `${pages.length} ${pages.length === 1 ? "page" : "pages"} total`
+              : "No pages yet"}
+          </p>
+        </section>
 
-        <h2 className="text-2xl mb-6 text-center">Pages</h2>
-        {pages.length === 0 ? (
-          <p className="text-center text-zinc-400">No pages yet</p>
-        ) : (
-          <div className="space-y-12">
-            {pages.map((page) => (
-              <div
-                key={page.id}
-                className="flex flex-col items-center space-y-3"
-              >
-                <p className="text-sm text-zinc-400">
-                  Page {page.page_number} of {pages.length}
-                </p>
-                <img
-                  src={page.image_url}
-                  className="rounded-lg max-h-[80vh] w-auto max-w-full shadow-lg"
-                  alt={`Page ${page.page_number}`}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <section>
+          <h2 className="text-2xl font-semibold mb-6 text-center">
+            Story Pages
+          </h2>
+          {pages.length === 0 ? (
+            <p className="text-center text-zinc-400">No pages yet</p>
+          ) : (
+            <div className="space-y-12">
+              {pages.map((page) => (
+                <article
+                  key={page.id}
+                  className="flex flex-col items-center space-y-3 rounded-xl border border-zinc-900 bg-zinc-900/50 p-4"
+                >
+                  <p className="text-sm text-zinc-400">
+                    Page {page.page_number} of {pages.length}
+                  </p>
+                  <img
+                    src={page.image_url}
+                    className="rounded-lg max-h-[80vh] w-auto max-w-full shadow-lg"
+                    alt={`Page ${page.page_number}`}
+                  />
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </main>
   );

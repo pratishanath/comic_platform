@@ -9,6 +9,7 @@ type Comic = {
   title: string;
   description: string | null;
   user_id?: string | null;
+  author_id?: string | null;
   created_at: string;
 };
 
@@ -66,24 +67,22 @@ export default function ExplorePage() {
           </p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {comics.map((comic) => (
+            {comics.map((comic) => {
+              const creatorIdentifier =
+                comic.user_id || comic.author_id || "Unknown creator";
+
+              return (
               <article
                 key={comic.id}
                 className="flex flex-col justify-between rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-lg hover:border-emerald-500 transition"
               >
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs text-zinc-400 uppercase tracking-wide">
-                    <span>
-                      {comic.user_id ? comic.user_id : "Unknown author"}
-                    </span>
-                    <span>
-                      {new Date(comic.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <h2 className="text-2xl font-semibold">{comic.title}</h2>
-                  {comic.user_id && (
-                    <p className="text-xs text-zinc-500">By {comic.user_id}</p>
-                  )}
+                    <div className="text-xs text-zinc-500 uppercase tracking-wide flex items-center justify-between">
+                      <span>Published</span>
+                      <span>{new Date(comic.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <h2 className="text-2xl font-semibold">{comic.title}</h2>
+                    <p className="text-xs text-zinc-500">By {creatorIdentifier}</p>
                   <p className="text-zinc-300">
                     {comic.description
                       ? truncate(comic.description, 150)
@@ -97,7 +96,8 @@ export default function ExplorePage() {
                   Read
                 </Link>
               </article>
-            ))}
+            );
+          })}
           </div>
         )}
       </div>

@@ -9,6 +9,7 @@ type Comic = {
   title: string;
   description: string;
   created_at: string;
+  is_public: boolean;
 };
 
 export default function Dashboard() {
@@ -56,31 +57,42 @@ export default function Dashboard() {
           <ul className="space-y-3">
             {comics.map((comic) => (
               <li
-              key={comic.id}
-              className="border border-zinc-800 rounded p-4 hover:border-zinc-500 transition"
-            >
-              <h2 className="text-xl font-semibold">{comic.title}</h2>
-              <p className="text-zinc-400 text-sm mt-1">{comic.description}</p>
-              <p className="text-xs text-zinc-500 mt-2">
-                {new Date(comic.created_at).toLocaleString()}
-              </p>
-          
-              <div className="mt-3 flex gap-2">
-                <Link
-                  href={`/comics/${comic.id}`}
-                  className="text-sm px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700"
-                >
-                  View comic
-                </Link>
-          
-                <Link
-                  href={`/comics/${comic.id}/pages`}
-                  className="text-sm px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700"
-                >
-                  Manage pages
-                </Link>
-              </div>
-            </li>
+                key={comic.id}
+                className="border border-zinc-800 rounded p-4 hover:border-zinc-500 transition"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-xl font-semibold">{comic.title}</h2>
+                  <span
+                    className={`px-2.5 py-0.5 text-xs font-semibold rounded-full ${
+                      comic.is_public
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/40"
+                        : "bg-zinc-800 text-zinc-300 border border-zinc-700"
+                    }`}
+                  >
+                    {comic.is_public ? "Public" : "Private"}
+                  </span>
+                </div>
+                <p className="text-zinc-400 text-sm mt-1">{comic.description}</p>
+                <p className="text-xs text-zinc-500 mt-2">
+                  {new Date(comic.created_at).toLocaleString()}
+                </p>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link
+                    href={`/comics/${comic.id}`}
+                    className="text-sm px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700"
+                  >
+                    View comic
+                  </Link>
+
+                  <Link
+                    href={`/comics/${comic.id}/pages`}
+                    className="text-sm px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700"
+                  >
+                    Manage pages
+                  </Link>
+                </div>
+              </li>
             ))}
           </ul>
         )}

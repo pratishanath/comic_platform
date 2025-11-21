@@ -29,11 +29,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-950 text-white`}
       >
         <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-900/90 backdrop-blur">
-          <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between">
             <Link href="/" className="text-xl font-semibold tracking-tight">
               PanelPlay
             </Link>
-            <nav className="flex items-center gap-4 text-sm font-medium text-zinc-300">
+            <nav className="flex flex-wrap items-center gap-3 text-sm font-medium text-zinc-300 sm:justify-end">
               <Link className="hover:text-white transition" href="/">
                 Home
               </Link>
