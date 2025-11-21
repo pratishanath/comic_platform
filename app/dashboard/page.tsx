@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 type Comic = {
@@ -13,11 +14,49 @@ type Comic = {
 };
 
 export default function Dashboard() {
+  const router = useRouter();
   const [comics, setComics] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(true);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
+    async function verifySession() {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        router.replace("/auth?redirect=/dashboard");
+        return;
+      }
+
+      if (isMounted) {
+        setCheckingAuth(false);
+      }
+    }
+
+    verifySession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        router.replace("/auth?redirect=/dashboard");
+      } else {
+        setCheckingAuth(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (checkingAuth) return;
+
     async function loadComics() {
+      setLoading(true);
       const { data, error } = await supabase
         .from("comics")
         .select("*")
@@ -33,7 +72,15 @@ export default function Dashboard() {
     }
 
     loadComics();
-  }, []);
+  }, [checkingAuth]);
+
+  if (checkingAuth) {
+    return (
+      <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+        <p className="text-zinc-400">Checking your dashboard access…</p>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white p-8">

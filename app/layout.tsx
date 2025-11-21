@@ -35,22 +35,22 @@ export default function RootLayout({
             </Link>
             <nav className="flex flex-wrap items-center gap-3 text-sm font-medium text-zinc-300 sm:justify-end">
               <Link className="hover:text-white transition" href="/">
-                Home
-              </Link>
-              <Link className="hover:text-white transition" href="/explore">
                 Explore
+              </Link>
+              <Link className="hover:text-white transition" href="/#originals">
+                Originals
+              </Link>
+              <Link className="hover:text-white transition" href="/#categories">
+                Categories
+              </Link>
+              <Link className="hover:text-white transition" href="/#creator-hub">
+                Creator Hub
               </Link>
               <Link className="hover:text-white transition" href="/dashboard">
                 Dashboard
               </Link>
               <Link className="hover:text-white transition" href="/create-comic">
-                Create Comic
-              </Link>
-              <Link
-                className="hover:text-white transition"
-                href="/ai/story-helper"
-              >
-                AI Story Helper
+                Publish
               </Link>
             </nav>
           </div>
